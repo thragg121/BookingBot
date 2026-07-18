@@ -59,6 +59,27 @@ async def booking_confirm_handler(
         ),
     )
 
+    if booking is None:
+        await state.clear()
+
+        await callback.answer(
+            "This time slot has just been booked by another client.",
+            show_alert=True,
+        )
+
+        if callback.message is not None:
+            await callback.message.edit_text(
+                "⚠️ This time slot is no longer available.\n\n"
+                "Please start a new booking and choose another time."
+            )
+
+            await callback.message.answer(
+                "Choose an action:",
+                reply_markup=get_main_menu(),
+            )
+
+        return
+
     await notify_admins_about_booking(
         bot=bot,
         config=config,

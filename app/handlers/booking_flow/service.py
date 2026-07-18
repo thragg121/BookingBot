@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.services import get_active_services
 from app.keyboards.dates import get_dates_keyboard
 from app.states.booking import BookingState
+from config import Config
 
 
 router = Router()
@@ -19,6 +20,7 @@ async def service_selected_handler(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    config: Config,
 ) -> None:
     if callback.data is None:
         return
@@ -65,7 +67,10 @@ async def service_selected_handler(
             f"Duration: "
             f"<b>{service.duration_minutes} minutes</b>\n\n"
             "Choose a date:",
-            reply_markup=get_dates_keyboard(),
+            reply_markup=get_dates_keyboard(
+                working_days=config.working_days,
+                days_ahead=config.booking_days_ahead,
+            ),
         )
 
     await callback.answer()

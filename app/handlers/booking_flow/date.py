@@ -5,9 +5,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.bookings import get_booked_times
+from app.database.bookings import get_booked_intervals
 from app.keyboards.times import get_times_keyboard
 from app.states.booking import BookingState
+from config import Config
 
 
 router = Router()
@@ -21,6 +22,7 @@ async def date_selected_handler(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    config: Config,
 ) -> None:
     if callback.data is None:
         return
@@ -28,12 +30,32 @@ async def date_selected_handler(
     date_text = callback.data.split(":", maxsplit=1)[1]
     selected_date = date.fromisoformat(date_text)
 
-    booked_times = await get_booked_times(
+    booking_data = await state.get_data()
+
+    duration_minutes = int(
+        booking_data["duration_minutes"]
+    )
+
+    booked_intervals = await get_booked_intervals(
         session=session,
         booking_date=selected_date,
     )
 
-    if len(booked_times) >= 8:
+    keyboard = get_times_keyboard(
+        booking_date=selected_date,
+        service_duration_minutes=duration_minutes,
+        booked_intervals=booked_intervals,
+        working_hour_start=config.working_hour_start,
+        working_hour_end=config.working_hour_end,
+        minimum_booking_notice_minutes=(
+            config.minimum_booking_notice_minutes
+        ),
+        slot_interval_minutes=(
+            config.booking_slot_interval_minutes
+        ),
+    )
+
+    if not keyboard.inline_keyboard:
         await callback.answer(
             "No available time slots for this date.",
             show_alert=True,
@@ -53,7 +75,7 @@ async def date_selected_handler(
             f"Selected date: "
             f"<b>{selected_date.strftime('%A, %d %B %Y')}</b>\n\n"
             "Choose an available time:",
-            reply_markup=get_times_keyboard(booked_times),
+            reply_markup=keyboard,
         )
 
     await callback.answer()

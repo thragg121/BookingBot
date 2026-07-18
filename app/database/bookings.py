@@ -1,4 +1,4 @@
-﻿from datetime import date, time
+﻿from datetime import date, datetime, time, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,7 +13,53 @@ async def create_booking(
     service_id: int,
     booking_date: date,
     booking_time: time,
-) -> Booking:
+) -> Booking | None:
+    service_result = await session.execute(
+        select(Service).where(
+            Service.id == service_id
+        )
+    )
+    service = service_result.scalar_one_or_none()
+
+    if service is None:
+        return None
+
+    existing_result = await session.execute(
+        select(Booking, Service)
+        .join(
+            Service,
+            Booking.service_id == Service.id,
+        )
+        .where(
+            Booking.booking_date == booking_date
+        )
+    )
+
+    requested_start = datetime.combine(
+        booking_date,
+        booking_time,
+    )
+    requested_end = requested_start + timedelta(
+        minutes=service.duration_minutes
+    )
+
+    for existing_booking, existing_service in existing_result.all():
+        existing_start = datetime.combine(
+            existing_booking.booking_date,
+            existing_booking.booking_time,
+        )
+        existing_end = existing_start + timedelta(
+            minutes=existing_service.duration_minutes
+        )
+
+        overlaps = (
+            requested_start < existing_end
+            and requested_end > existing_start
+        )
+
+        if overlaps:
+            return None
+
     booking = Booking(
         user_id=user_id,
         service_id=service_id,
@@ -28,20 +74,28 @@ async def create_booking(
     return booking
 
 
-async def get_booked_times(
+async def get_booked_intervals(
     session: AsyncSession,
     booking_date: date,
-) -> set[str]:
+) -> list[tuple[str, int]]:
     result = await session.execute(
-        select(Booking.booking_time).where(
+        select(Booking, Service)
+        .join(
+            Service,
+            Booking.service_id == Service.id,
+        )
+        .where(
             Booking.booking_date == booking_date
         )
     )
 
-    return {
-        item.strftime("%H:%M")
-        for item in result.scalars().all()
-    }
+    return [
+        (
+            booking.booking_time.strftime("%H:%M"),
+            service.duration_minutes,
+        )
+        for booking, service in result.all()
+    ]
 
 
 async def get_user_bookings(

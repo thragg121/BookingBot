@@ -1,4 +1,4 @@
-from aiogram import Router
+﻿from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,8 +29,13 @@ async def start_handler(
     )
 
     await message.answer(
-        f"?? Hello, <b>{telegram_user.first_name}</b>!\n\n"
-        "Welcome to BookingBot.\n"
-        "Choose an action from the menu below.",
+        f"👋 Hello, <b>{telegram_user.first_name}</b>!\n\n"
+        "Welcome to <b>BookingBot</b>.\n\n"
+        "Here you can:\n"
+        "• book an appointment\n"
+        "• view your bookings\n"
+        "• cancel an appointment\n"
+        "• check your profile\n\n"
+        "Choose an action below.",
         reply_markup=get_main_menu(),
     )
