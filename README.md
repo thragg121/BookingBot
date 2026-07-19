@@ -94,29 +94,6 @@ The project is designed as a reusable foundation for appointment-based businesse
 
 ---
 
-## Demo
-
-> Add a GIF showing the complete booking flow to  
-> `docs/assets/booking-demo.gif`
-
-<p align="center">
-  <img src="docs/assets/booking-demo.gif" alt="BookingBot demo" width="420">
-</p>
-
-The recommended demo sequence:
-
-```text
-/start
-  → Choose a service
-  → Choose a date
-  → Choose an available time
-  → Review booking
-  → Confirm
-  → Receive success message
-```
-
----
-
 ## Architecture
 
 ```mermaid
