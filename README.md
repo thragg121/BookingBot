@@ -117,41 +117,6 @@ The recommended demo sequence:
 
 ---
 
-## Screenshots
-
-Place project screenshots inside:
-
-```text
-docs/assets/screenshots/
-```
-
-Recommended screenshots:
-
-| Customer flow | Administration |
-|---|---|
-| Main menu | Admin panel |
-| Service selection | Service management |
-| Calendar | Booking statistics |
-| Available time slots | Broadcast creation |
-| Booking confirmation | Admin notification |
-| My Bookings | Customer profile |
-
-Example layout:
-
-<p align="center">
-  <img src="docs/assets/screenshots/main-menu.png" alt="Main menu" width="30%">
-  <img src="docs/assets/screenshots/service-selection.png" alt="Service selection" width="30%">
-  <img src="docs/assets/screenshots/calendar.png" alt="Booking calendar" width="30%">
-</p>
-
-<p align="center">
-  <img src="docs/assets/screenshots/time-selection.png" alt="Time selection" width="30%">
-  <img src="docs/assets/screenshots/confirmation.png" alt="Booking confirmation" width="30%">
-  <img src="docs/assets/screenshots/admin-panel.png" alt="Admin panel" width="30%">
-</p>
-
----
-
 ## Architecture
 
 ```mermaid
