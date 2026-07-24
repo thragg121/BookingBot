@@ -202,51 +202,51 @@ Administrative workflow demonstration:
 
 ## Screenshots
 
-### Welcome Screen
+<table>
+<tr>
+<td align="center">
+<b>Welcome</b><br>
+<img src="docs/assets/screenshots/01-welcome-screen.png" width="360">
+</td>
+<td align="center">
+<b>Service Selection</b><br>
+<img src="docs/assets/screenshots/02-service-selection.png" width="360">
+</td>
+</tr>
 
-![Welcome Screen](docs/assets/screenshots/01-welcome-screen.png)
+<tr>
+<td align="center">
+<b>Date Selection</b><br>
+<img src="docs/assets/screenshots/03-date-selection.png" width="360">
+</td>
+<td align="center">
+<b>Time Selection</b><br>
+<img src="docs/assets/screenshots/04-time-selection.png" width="360">
+</td>
+</tr>
 
----
+<tr>
+<td align="center">
+<b>Booking Review</b><br>
+<img src="docs/assets/screenshots/05-booking-review.png" width="360">
+</td>
+<td align="center">
+<b>Booking Confirmed</b><br>
+<img src="docs/assets/screenshots/06-booking-confirmed.png" width="360">
+</td>
+</tr>
 
-### Service Selection
-
-![Service Selection](docs/assets/screenshots/02-service-selection.png)
-
----
-
-### Date Selection
-
-![Date Selection](docs/assets/screenshots/03-date-selection.png)
-
----
-
-### Time Selection
-
-![Time Selection](docs/assets/screenshots/04-time-selection.png)
-
----
-
-### Booking Review
-
-![Booking Review](docs/assets/screenshots/05-booking-review.png)
-
----
-
-### Booking Confirmed
-
-![Booking Confirmed](docs/assets/screenshots/06-booking-confirmed.png)
-
----
-
-### My Bookings
-
-![My Bookings](docs/assets/screenshots/07-my-bookings.png)
-
----
-
-### Admin Dashboard
-
-![Admin Dashboard](docs/assets/screenshots/08-admin-dashboard.png)
+<tr>
+<td align="center">
+<b>My Bookings</b><br>
+<img src="docs/assets/screenshots/07-my-bookings.png" width="360">
+</td>
+<td align="center">
+<b>Admin Dashboard</b><br>
+<img src="docs/assets/screenshots/08-admin-dashboard.png" width="360">
+</td>
+</tr>
+</table>
 
 ## Project Structure
 
