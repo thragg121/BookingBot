@@ -200,6 +200,54 @@ Administrative workflow demonstration:
 
 ---
 
+## Screenshots
+
+### Welcome Screen
+
+![Welcome Screen](docs/assets/screenshots/01-welcome-screen.png)
+
+---
+
+### Service Selection
+
+![Service Selection](docs/assets/screenshots/02-service-selection.png)
+
+---
+
+### Date Selection
+
+![Date Selection](docs/assets/screenshots/03-date-selection.png)
+
+---
+
+### Time Selection
+
+![Time Selection](docs/assets/screenshots/04-time-selection.png)
+
+---
+
+### Booking Review
+
+![Booking Review](docs/assets/screenshots/05-booking-review.png)
+
+---
+
+### Booking Confirmed
+
+![Booking Confirmed](docs/assets/screenshots/06-booking-confirmed.png)
+
+---
+
+### My Bookings
+
+![My Bookings](docs/assets/screenshots/07-my-bookings.png)
+
+---
+
+### Admin Dashboard
+
+![Admin Dashboard](docs/assets/screenshots/08-admin-dashboard.png)
+
 ## Project Structure
 
 The exact structure may differ slightly depending on the current project version.
