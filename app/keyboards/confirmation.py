@@ -6,13 +6,13 @@ def get_booking_confirmation_keyboard() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="? Confirm Booking",
+                    text="✅ Confirm Booking",
                     callback_data="booking_confirm",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="? Cancel",
+                    text="❌ Cancel",
                     callback_data="booking_cancel",
                 ),
             ],

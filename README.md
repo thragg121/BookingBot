@@ -168,6 +168,38 @@ flowchart LR
 
 ---
 
+## Demo
+
+### Client Booking Flow
+
+Complete customer booking journey:
+
+- welcome screen;
+- service selection;
+- date selection;
+- available time selection;
+- booking review;
+- booking confirmation;
+- My Bookings.
+
+[▶ Watch the client booking demo](docs/assets/demo/booking-client-demo.mp4)
+
+---
+
+### Admin Dashboard
+
+Administrative workflow demonstration:
+
+- admin panel;
+- booking management;
+- service management;
+- working-hours configuration;
+- operational controls.
+
+[▶ Watch the admin dashboard demo](docs/assets/demo/booking-admin-demo.mp4)
+
+---
+
 ## Project Structure
 
 The exact structure may differ slightly depending on the current project version.
