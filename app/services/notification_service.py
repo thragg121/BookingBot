@@ -30,7 +30,7 @@ async def notify_admins_about_booking(
         f"Service: <b>{service_name}</b>\n"
         f"Date: <b>{booking_date}</b>\n"
         f"Time: <b>{booking_time}</b>\n"
-        f"Price: <b></b>"
+        f"Price: <b>${price}</b>"
     )
 
     for admin_id in config.admin_ids:
