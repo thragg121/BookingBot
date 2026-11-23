@@ -1,6 +1,9 @@
 import asyncio
 import os
 
+from aiogram import Bot
+from aiogram.exceptions import TelegramRetryAfter
+
 from app.bot import create_bot, create_dispatcher
 from app.database.database import Database
 from app.database.init_db import init_database
@@ -9,6 +12,27 @@ from app.handlers.router import register_routers
 from app.core.logger import logger
 from app.middlewares.database import DatabaseMiddleware
 from config import load_config
+
+
+async def wait_for_telegram(bot: Bot) -> None:
+    """Resolve the bot identity, honouring Telegram flood-control waits.
+
+    Crashing on TelegramRetryAfter makes the host restart the process
+    immediately, which triggers another GetMe call and extends the ban.
+    bot.me() caches the result, so start_polling will not call GetMe again.
+    """
+    while True:
+        try:
+            me = await bot.me()
+            logger.info("Connected to Telegram as @{}", me.username)
+            return
+        except TelegramRetryAfter as error:
+            delay = error.retry_after + 1
+            logger.warning(
+                "Telegram flood control: waiting {} seconds before retry.",
+                delay,
+            )
+            await asyncio.sleep(delay)
 
 
 async def main() -> None:
@@ -37,6 +61,7 @@ async def main() -> None:
     logger.info("BookingBot started.")
 
     try:
+        await wait_for_telegram(bot)
         await dp.start_polling(
             bot,
             config=config,
