@@ -17,6 +17,7 @@ class Config:
     booking_days_ahead: int
     minimum_booking_notice_minutes: int
     booking_slot_interval_minutes: int
+    demo_mode: bool = False
 
 
 def _parse_int_tuple(
@@ -136,4 +137,6 @@ def load_config() -> Config:
         booking_slot_interval_minutes=(
             booking_slot_interval_minutes
         ),
+        demo_mode=getenv("DEMO_MODE", "0").strip().lower()
+        in {"1", "true", "yes", "on"},
     )

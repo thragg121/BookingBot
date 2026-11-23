@@ -1,4 +1,4 @@
-﻿from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 def get_booking_actions_keyboard(
@@ -8,7 +8,7 @@ def get_booking_actions_keyboard(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="❌ Cancel Booking",
+                    text="❌ Скасувати запис",
                     callback_data=f"cancel_booking:{booking_id}",
                 )
             ]

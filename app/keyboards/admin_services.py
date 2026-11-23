@@ -1,65 +1,59 @@
-﻿from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from app.core.texts import format_price
 from app.models.service import Service
 
 
 def get_services_admin_keyboard(
     services: list[Service],
 ) -> InlineKeyboardMarkup:
-    keyboard: list[list[InlineKeyboardButton]] = []
-
-    keyboard.append(
+    keyboard: list[list[InlineKeyboardButton]] = [
         [
             InlineKeyboardButton(
-                text="➕ Add Service",
+                text="➕ Додати послугу",
                 callback_data="add_service",
             )
         ]
-    )
+    ]
 
     for service in services:
         status = "🟢" if service.is_active else "🔴"
-        formatted_price = f"{service.price:.2f}"
 
         keyboard.append(
             [
                 InlineKeyboardButton(
                     text=(
                         f"{status} {service.name} | "
-                        f"${formatted_price} | "
-                        f"{service.duration_minutes} min"
+                        f"{format_price(service.price)} | "
+                        f"{service.duration_minutes} хв"
                     ),
                     callback_data=f"toggle_service:{service.id}",
                 )
             ]
         )
-
         keyboard.append(
             [
                 InlineKeyboardButton(
-                    text="✏ Rename",
+                    text="✏ Назва",
                     callback_data=f"rename_service:{service.id}",
                 ),
                 InlineKeyboardButton(
-                    text="💰 Price",
+                    text="💰 Ціна",
                     callback_data=f"edit_service_price:{service.id}",
                 ),
             ]
         )
-
         keyboard.append(
             [
                 InlineKeyboardButton(
-                    text="⏱ Duration",
+                    text="⏱ Тривалість",
                     callback_data=f"edit_service_duration:{service.id}",
                 ),
                 InlineKeyboardButton(
-                    text="🗑 Delete",
+                    text="🗑 Видалити",
                     callback_data=f"delete_service:{service.id}",
                 ),
             ]
         )
 
-    return InlineKeyboardMarkup(
-        inline_keyboard=keyboard
-    )
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)

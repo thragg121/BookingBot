@@ -20,13 +20,13 @@ async def global_error_handler(
 
     if update.message is not None:
         await update.message.answer(
-            "⚠️ An unexpected error occurred.\n"
-            "Please try again later."
+            "⚠️ Сталася помилка.\n"
+            "Спробуйте ще раз пізніше."
         )
 
     elif update.callback_query is not None:
         await update.callback_query.answer(
-            "An unexpected error occurred.",
+            "Сталася помилка.",
             show_alert=True,
         )
 

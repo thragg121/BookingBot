@@ -8,22 +8,28 @@ from app.models.service import Service
 
 DEFAULT_SERVICES = [
     Service(
-        name="Haircut",
-        description="Classic haircut service.",
+        name="Жіноча стрижка",
+        description="Стрижка, миття та укладка.",
         duration_minutes=60,
-        price=Decimal("30.00"),
+        price=Decimal("600.00"),
     ),
     Service(
-        name="Consultation",
-        description="One-to-one consultation.",
-        duration_minutes=45,
-        price=Decimal("40.00"),
-    ),
-    Service(
-        name="Premium Session",
-        description="Extended premium appointment.",
+        name="Манікюр з покриттям",
+        description="Апаратний манікюр + гель-лак.",
         duration_minutes=90,
-        price=Decimal("70.00"),
+        price=Decimal("750.00"),
+    ),
+    Service(
+        name="Чоловіча стрижка",
+        description="Класична або фейд.",
+        duration_minutes=45,
+        price=Decimal("400.00"),
+    ),
+    Service(
+        name="Фарбування брів",
+        description="Корекція та фарбування.",
+        duration_minutes=30,
+        price=Decimal("350.00"),
     ),
 ]
 

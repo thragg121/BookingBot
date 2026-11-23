@@ -4,6 +4,7 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from app.core.texts import format_date_full
 from app.keyboards.confirmation import get_booking_confirmation_keyboard
 from app.states.booking import BookingState
 
@@ -34,19 +35,19 @@ async def time_selected_handler(
         BookingState.confirming
     )
 
-    formatted_date = date.fromisoformat(
-        booking_data["booking_date"]
-    ).strftime("%A, %d %B %Y")
+    formatted_date = format_date_full(
+        date.fromisoformat(booking_data["booking_date"])
+    )
 
     if callback.message is not None:
         await callback.message.edit_text(
-            "📋 <b>Please confirm your booking</b>\n\n"
-            f"Service: <b>{booking_data['service_name']}</b>\n"
-            f"Date: <b>{formatted_date}</b>\n"
-            f"Time: <b>{selected_time}</b>\n"
-            f"Duration: "
-            f"<b>{booking_data['duration_minutes']} minutes</b>\n"
-            f"Price: <b>${booking_data['service_price']}</b>",
+            "📋 <b>Перевірте запис</b>\n\n"
+            f"Послуга: <b>{booking_data['service_name']}</b>\n"
+            f"Дата: <b>{formatted_date}</b>\n"
+            f"Час: <b>{selected_time}</b>\n"
+            f"Тривалість: "
+            f"<b>{booking_data['duration_minutes']} хв</b>\n"
+            f"Вартість: <b>{booking_data['service_price']}</b>",
             reply_markup=get_booking_confirmation_keyboard(),
         )
 

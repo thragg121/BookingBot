@@ -1,19 +1,28 @@
-﻿from aiogram import Router
+from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.keyboards.main_menu import get_main_menu
 from app.services.user_service import register_user
+from config import Config
 
 
 router = Router()
+
+
+DEMO_NOTE = (
+    "\n\n<i>🧪 Це демо-версія. Запишіться на будь-яку послугу — "
+    "і ви одразу отримаєте сповіщення так, як його бачить власник. "
+    "Також відкрийте «Панель власника», щоб побачити розклад і статистику.</i>"
+)
 
 
 @router.message(CommandStart())
 async def start_handler(
     message: Message,
     session: AsyncSession,
+    config: Config,
 ) -> None:
     telegram_user = message.from_user
 
@@ -28,14 +37,20 @@ async def start_handler(
         language_code=telegram_user.language_code,
     )
 
+    text = (
+        f"👋 Вітаємо, <b>{telegram_user.first_name}</b>!\n\n"
+        "Це бот для онлайн-запису до салону <b>Beauty Studio</b>.\n\n"
+        "Тут ви можете:\n"
+        "• записатися на послугу за 30 секунд\n"
+        "• переглянути свої записи\n"
+        "• скасувати запис\n\n"
+        "Оберіть дію нижче."
+    )
+
+    if config.demo_mode:
+        text += DEMO_NOTE
+
     await message.answer(
-        f"👋 Hello, <b>{telegram_user.first_name}</b>!\n\n"
-        "Welcome to <b>BookingBot</b>.\n\n"
-        "Here you can:\n"
-        "• book an appointment\n"
-        "• view your bookings\n"
-        "• cancel an appointment\n"
-        "• check your profile\n\n"
-        "Choose an action below.",
-        reply_markup=get_main_menu(),
+        text,
+        reply_markup=get_main_menu(config.demo_mode),
     )

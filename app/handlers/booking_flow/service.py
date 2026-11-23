@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import format_price
 from app.database.services import get_active_services
 from app.keyboards.dates import get_dates_keyboard
 from app.states.booking import BookingState
@@ -42,12 +43,12 @@ async def service_selected_handler(
 
     if service is None:
         await callback.answer(
-            "Service not found.",
+            "Послугу не знайдено.",
             show_alert=True,
         )
         return
 
-    formatted_price = f"{service.price:.2f}"
+    formatted_price = format_price(service.price)
 
     await state.update_data(
         service_id=service.id,
@@ -62,11 +63,11 @@ async def service_selected_handler(
 
     if callback.message is not None:
         await callback.message.edit_text(
-            f"Selected service: <b>{service.name}</b>\n"
-            f"Price: <b>${formatted_price}</b>\n"
-            f"Duration: "
-            f"<b>{service.duration_minutes} minutes</b>\n\n"
-            "Choose a date:",
+            f"Послуга: <b>{service.name}</b>\n"
+            f"Вартість: <b>{formatted_price}</b>\n"
+            f"Тривалість: "
+            f"<b>{service.duration_minutes} хв</b>\n\n"
+            "📅 Оберіть дату:",
             reply_markup=get_dates_keyboard(
                 working_days=config.working_days,
                 days_ahead=config.booking_days_ahead,

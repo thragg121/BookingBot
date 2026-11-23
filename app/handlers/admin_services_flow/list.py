@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import BTN_SERVICES
 from app.filters.admin import IsAdmin
 from app.keyboards.admin_services import (
     get_services_admin_keyboard,
@@ -17,7 +18,7 @@ router = Router()
 router.message.filter(IsAdmin())
 
 
-@router.message(F.text == "⚙ Services")
+@router.message(F.text == BTN_SERVICES)
 async def services_handler(
     message: Message,
     session: AsyncSession,
@@ -29,14 +30,14 @@ async def services_handler(
 
     if not services:
         await message.answer(
-            "No services have been created yet."
+            "Послуг ще немає."
         )
         return
 
     await message.answer(
-        "⚙ <b>Manage Services</b>\n\n"
-        "Tap a service to enable or disable it.\n"
-        "Use the buttons below to edit its settings.",
+        "⚙ <b>Керування послугами</b>\n\n"
+        "Натисніть на послугу, щоб увімкнути чи вимкнути її.\n"
+        "Кнопки нижче змінюють назву, ціну та тривалість.",
         reply_markup=get_services_admin_keyboard(
             services
         ),

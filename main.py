@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from app.bot import create_bot, create_dispatcher
 from app.database.database import Database
@@ -12,6 +13,13 @@ from config import load_config
 
 async def main() -> None:
     config = load_config()
+
+    # SQLite needs its folder to exist (e.g. data/ on a fresh server).
+    if config.database_url.startswith("sqlite"):
+        db_path = config.database_url.split(":///", 1)[-1]
+        db_dir = os.path.dirname(db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
 
     bot = create_bot(config)
     dp = create_dispatcher()
@@ -30,9 +38,9 @@ async def main() -> None:
 
     try:
         await dp.start_polling(
-    bot,
-    config=config,
-)
+            bot,
+            config=config,
+        )
     finally:
         logger.info("BookingBot stopped.")
         await database.dispose()

@@ -2,6 +2,7 @@
 from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import BTN_MY_BOOKINGS, format_date_full
 from app.keyboards.my_bookings import get_booking_actions_keyboard
 from app.services.booking_service import (
     cancel_user_booking,
@@ -16,7 +17,7 @@ from config import Config
 router = Router()
 
 
-@router.message(F.text == "📖 My Bookings")
+@router.message(F.text == BTN_MY_BOOKINGS)
 async def my_bookings_handler(
     message: Message,
     session: AsyncSession,
@@ -31,19 +32,19 @@ async def my_bookings_handler(
 
     if not bookings:
         await message.answer(
-            "You don't have any bookings yet."
+            "У вас поки немає записів."
         )
         return
 
     await message.answer(
-        "📖 <b>Your Bookings</b>"
+        "📖 <b>Ваші записи</b>"
     )
 
     for booking, service in bookings:
         await message.answer(
             f"<b>{service.name}</b>\n"
-            f"Booking ID: <code>{booking.id}</code>\n"
-            f"📅 {booking.booking_date}\n"
+            f"Запис №<code>{booking.id}</code>\n"
+            f"📅 {format_date_full(booking.booking_date)}\n"
             f"🕒 {booking.booking_time.strftime('%H:%M')}",
             reply_markup=get_booking_actions_keyboard(
                 booking.id
@@ -75,7 +76,7 @@ async def cancel_user_booking_handler(
 
     if cancelled_data is None:
         await callback.answer(
-            "Booking not found.",
+            "Запис не знайдено.",
             show_alert=True,
         )
         return
@@ -90,13 +91,13 @@ async def cancel_user_booking_handler(
         username=callback.from_user.username,
         booking_id=booking.id,
         service_name=service.name,
-        booking_date=booking.booking_date.isoformat(),
+        booking_date=format_date_full(booking.booking_date),
         booking_time=booking.booking_time.strftime("%H:%M"),
     )
 
     if callback.message is not None:
         await callback.message.edit_text(
-            "❌ Booking cancelled successfully."
+            "❌ Запис скасовано. Чекаємо на вас іншим разом!"
         )
 
     await callback.answer()

@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import format_date_full
 from app.database.bookings import get_booked_intervals
 from app.keyboards.times import get_times_keyboard
 from app.states.booking import BookingState
@@ -57,7 +58,7 @@ async def date_selected_handler(
 
     if not keyboard.inline_keyboard:
         await callback.answer(
-            "No available time slots for this date.",
+            "На цю дату вільних вікон немає. Оберіть іншу.",
             show_alert=True,
         )
         return
@@ -72,9 +73,9 @@ async def date_selected_handler(
 
     if callback.message is not None:
         await callback.message.edit_text(
-            f"Selected date: "
-            f"<b>{selected_date.strftime('%A, %d %B %Y')}</b>\n\n"
-            "Choose an available time:",
+            f"Дата: "
+            f"<b>{format_date_full(selected_date)}</b>\n\n"
+            "🕒 Оберіть вільний час:",
             reply_markup=keyboard,
         )
 

@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import BTN_BROADCAST
 from app.keyboards.admin import get_admin_menu
 from app.keyboards.broadcast import (
     get_broadcast_confirmation_keyboard,
@@ -21,7 +22,7 @@ def is_admin(user_id: int) -> bool:
     return user_id in config.admin_ids
 
 
-@router.message(F.text == "📢 Broadcast")
+@router.message(F.text == BTN_BROADCAST)
 async def broadcast_start_handler(
     message: Message,
     state: FSMContext,
@@ -30,7 +31,7 @@ async def broadcast_start_handler(
         return
 
     if not is_admin(message.from_user.id):
-        await message.answer("Access denied.")
+        await message.answer("Доступ заборонено.")
         return
 
     await state.clear()
@@ -39,8 +40,8 @@ async def broadcast_start_handler(
     )
 
     await message.answer(
-        "Send the message you want to broadcast.\n\n"
-        "HTML formatting is supported."
+        "Надішліть текст розсилки.\n\n"
+        "Підтримується HTML-форматування."
     )
 
 
@@ -57,7 +58,7 @@ async def broadcast_message_handler(
 
     if not message.text:
         await message.answer(
-            "Please send a text message."
+            "Надішліть текстове повідомлення."
         )
         return
 
@@ -70,7 +71,7 @@ async def broadcast_message_handler(
     )
 
     await message.answer(
-        "📢 <b>Broadcast preview</b>\n\n"
+        "📢 <b>Попередній перегляд</b>\n\n"
         f"{message.text}",
         reply_markup=get_broadcast_confirmation_keyboard(),
     )
@@ -95,7 +96,7 @@ async def broadcast_confirm_handler(
     if not broadcast_text:
         await state.clear()
         await callback.answer(
-            "Broadcast text is missing.",
+            "Текст розсилки відсутній.",
             show_alert=True,
         )
         return
@@ -109,13 +110,13 @@ async def broadcast_confirm_handler(
     await state.clear()
 
     await callback.message.edit_text(
-        "✅ <b>Broadcast completed</b>\n\n"
-        f"Delivered: <b>{success_count}</b>\n"
-        f"Failed: <b>{failed_count}</b>"
+        "✅ <b>Розсилку завершено</b>\n\n"
+        f"Доставлено: <b>{success_count}</b>\n"
+        f"Не доставлено: <b>{failed_count}</b>"
     )
 
     await callback.message.answer(
-        "Admin panel:",
+        "Панель власника:",
         reply_markup=get_admin_menu(),
     )
 
@@ -136,11 +137,11 @@ async def broadcast_cancel_handler(
     await state.clear()
 
     await callback.message.edit_text(
-        "❌ Broadcast cancelled."
+        "❌ Розсилку скасовано."
     )
 
     await callback.message.answer(
-        "Admin panel:",
+        "Панель власника:",
         reply_markup=get_admin_menu(),
     )
 

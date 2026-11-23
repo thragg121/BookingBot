@@ -2,6 +2,7 @@
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import BTN_PROFILE
 from app.database.users import get_user
 from app.services.profile_service import build_profile_text
 
@@ -9,7 +10,7 @@ from app.services.profile_service import build_profile_text
 router = Router()
 
 
-@router.message(F.text == "👤 Profile")
+@router.message(F.text == BTN_PROFILE)
 async def profile_handler(
     message: Message,
     session: AsyncSession,
@@ -24,7 +25,7 @@ async def profile_handler(
 
     if user is None:
         await message.answer(
-            "Profile not found. Send /start first."
+            "Профіль не знайдено. Надішліть /start."
         )
         return
 

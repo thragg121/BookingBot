@@ -2,6 +2,8 @@
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from app.core.texts import format_date_short
+
 
 def get_dates_keyboard(
     working_days: tuple[int, ...],
@@ -19,9 +21,7 @@ def get_dates_keyboard(
             buttons.append(
                 [
                     InlineKeyboardButton(
-                        text=booking_date.strftime(
-                            "%a, %d %b"
-                        ),
+                        text=format_date_short(booking_date),
                         callback_data=(
                             "booking_date:"
                             f"{booking_date.isoformat()}"

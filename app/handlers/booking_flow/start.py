@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import BTN_BOOK
 from app.keyboards.services import get_services_keyboard
 from app.services.booking_service import list_available_services
 from app.states.booking import BookingState
@@ -11,7 +12,7 @@ from app.states.booking import BookingState
 router = Router()
 
 
-@router.message(F.text == "📅 Book Appointment")
+@router.message(F.text == BTN_BOOK)
 async def booking_start_handler(
     message: Message,
     session: AsyncSession,
@@ -21,7 +22,7 @@ async def booking_start_handler(
 
     if not services:
         await message.answer(
-            "No services are available right now."
+            "Наразі немає доступних послуг."
         )
         return
 
@@ -31,6 +32,6 @@ async def booking_start_handler(
     )
 
     await message.answer(
-        "Choose a service:",
+        "💅 Оберіть послугу:",
         reply_markup=get_services_keyboard(services),
     )

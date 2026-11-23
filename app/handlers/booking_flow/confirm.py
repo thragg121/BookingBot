@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.texts import format_date_full
 from app.keyboards.main_menu import get_main_menu
 from app.services.booking_save import save_booking
 from app.services.notification_service import (
@@ -42,7 +43,7 @@ async def booking_confirm_handler(
         await state.clear()
 
         await callback.answer(
-            "Booking data is incomplete. Please start again.",
+            "Дані запису неповні. Почніть спочатку.",
             show_alert=True,
         )
         return
@@ -63,19 +64,19 @@ async def booking_confirm_handler(
         await state.clear()
 
         await callback.answer(
-            "This time slot has just been booked by another client.",
+            "Цей час щойно зайняв інший клієнт.",
             show_alert=True,
         )
 
         if callback.message is not None:
             await callback.message.edit_text(
-                "⚠️ This time slot is no longer available.\n\n"
-                "Please start a new booking and choose another time."
+                "⚠️ Цей час уже зайнятий.\n\n"
+                "Почніть новий запис і оберіть інший час."
             )
 
             await callback.message.answer(
-                "Choose an action:",
-                reply_markup=get_main_menu(),
+                "Оберіть дію:",
+                reply_markup=get_main_menu(config.demo_mode),
             )
 
         return
@@ -88,7 +89,9 @@ async def booking_confirm_handler(
         username=callback.from_user.username,
         booking_id=booking.id,
         service_name=booking_data["service_name"],
-        booking_date=booking_data["booking_date"],
+        booking_date=format_date_full(
+            date.fromisoformat(booking_data["booking_date"])
+        ),
         booking_time=booking_data["booking_time"],
         price=booking_data["service_price"],
     )
@@ -97,17 +100,18 @@ async def booking_confirm_handler(
 
     if callback.message is not None:
         await callback.message.edit_text(
-            "✅ <b>Booking confirmed!</b>\n\n"
-            f"Booking ID: <code>{booking.id}</code>\n"
-            f"Service: <b>{booking_data['service_name']}</b>\n"
-            f"Date: <b>{booking_data['booking_date']}</b>\n"
-            f"Time: <b>{booking_data['booking_time']}</b>\n"
-            f"Price: <b>${booking_data['service_price']}</b>"
+            "✅ <b>Ви записані!</b>\n\n"
+            f"Запис №<code>{booking.id}</code>\n"
+            f"Послуга: <b>{booking_data['service_name']}</b>\n"
+            f"Дата: <b>{format_date_full(date.fromisoformat(booking_data['booking_date']))}</b>\n"
+            f"Час: <b>{booking_data['booking_time']}</b>\n"
+            f"Вартість: <b>{booking_data['service_price']}</b>\n\n"
+            "Чекаємо на вас! Скасувати запис можна в розділі «Мої записи»."
         )
 
         await callback.message.answer(
-            "Choose another action:",
-            reply_markup=get_main_menu(),
+            "Оберіть дію:",
+            reply_markup=get_main_menu(config.demo_mode),
         )
 
     await callback.answer()
@@ -120,17 +124,18 @@ async def booking_confirm_handler(
 async def booking_cancel_handler(
     callback: CallbackQuery,
     state: FSMContext,
+    config: Config,
 ) -> None:
     await state.clear()
 
     if callback.message is not None:
         await callback.message.edit_text(
-            "❌ Booking creation cancelled."
+            "❌ Запис скасовано."
         )
 
         await callback.message.answer(
-            "Choose an action:",
-            reply_markup=get_main_menu(),
+            "Оберіть дію:",
+            reply_markup=get_main_menu(config.demo_mode),
         )
 
     await callback.answer()

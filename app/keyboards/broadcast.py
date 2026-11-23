@@ -1,4 +1,4 @@
-﻿from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 def get_broadcast_confirmation_keyboard() -> InlineKeyboardMarkup:
@@ -6,13 +6,13 @@ def get_broadcast_confirmation_keyboard() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="✅ Send Broadcast",
+                    text="✅ Надіслати розсилку",
                     callback_data="broadcast_confirm",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="❌ Cancel",
+                    text="❌ Скасувати",
                     callback_data="broadcast_cancel",
                 ),
             ],
