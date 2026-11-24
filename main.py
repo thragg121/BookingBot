@@ -21,13 +21,18 @@ async def wait_for_telegram(bot: Bot) -> None:
     immediately, which triggers another GetMe call and extends the ban.
     bot.me() caches the result, so start_polling will not call GetMe again.
     """
+    attempt = 0
+
     while True:
         try:
             me = await bot.me()
             logger.info("Connected to Telegram as @{}", me.username)
             return
         except TelegramRetryAfter as error:
-            delay = error.retry_after + 1
+            # Back off further on every failed attempt (capped at 15 min)
+            # so a long flood-control window is not kept alive by retries.
+            attempt += 1
+            delay = max(error.retry_after + 1, min(60 * 2 ** (attempt - 1), 900))
             logger.warning(
                 "Telegram flood control: waiting {} seconds before retry.",
                 delay,
