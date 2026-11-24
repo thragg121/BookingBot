@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nova Nails — демо лендингу</title>
+<meta name="description" content="Демо лендингу для майстра: послуги й ціни, відгуки, форма запису із заявкою власнику в Telegram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f4; --surface:#ffffff; --ink:#221d1b; --muted:#6f6560; --line:#e9e1da;
+  --accent:#a2574a; --accent-ink:#fff; --soft:#f3e9e3; --tg:#2aa3df; --ok:#2f8f5b;
+  --f-display:"Cormorant Garamond", Georgia, serif; --f-body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#171312; --surface:#211b19; --ink:#f3ece8; --muted:#b3a7a1; --line:#3a302c;
+    --accent:#d98a7a; --accent-ink:#1b1311; --soft:#2c2320;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171312; --surface:#211b19; --ink:#f3ece8; --muted:#b3a7a1; --line:#3a302c;
+  --accent:#d98a7a; --accent-ink:#1b1311; --soft:#2c2320;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* demo ribbon */
+.ribbon{background:var(--ink);color:var(--bg);font-size:13.5px}
+.ribbon .wrap{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.ribbon a{font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:var(--f-display);font-size:26px;font-weight:600;letter-spacing:.5px;text-decoration:none}
+.logo span{color:var(--accent);font-style:italic}
+.links{display:flex;gap:22px;font-size:14.5px}
+.links a{text-decoration:none;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font:600 15px var(--f-body);padding:13px 22px;border-radius:999px;background:var(--accent);color:var(--accent-ink);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:9px 16px;font-size:14px}
+
+/* hero */
+.hero{padding:64px 0 48px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-family:var(--f-display);font-weight:500;font-size:clamp(40px,6vw,66px);line-height:1.02;margin:14px 0 18px}
+h1 em{color:var(--accent)}
+.lead{color:var(--muted);font-size:18px;max-width:30em}
+.hero-cta{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.facts{display:flex;gap:28px;margin-top:34px;flex-wrap:wrap}
+.facts b{display:block;font-family:var(--f-display);font-size:30px;font-weight:600}
+.facts span{font-size:13.5px;color:var(--muted)}
+.palette{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--soft);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:18px}
+.sw{border-radius:999px 999px 22px 22px;box-shadow:inset 0 -12px 24px rgba(0,0,0,.08)}
+.palette .tag{position:absolute;left:18px;bottom:18px;right:18px;background:var(--surface);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+
+section{padding:56px 0}
+h2{font-family:var(--f-display);font-weight:500;font-size:clamp(32px,4.4vw,44px);margin:0 0 8px;line-height:1.1}
+.sub{color:var(--muted);margin:0 0 30px}
+
+/* services */
+.svc{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
+.svc-row{display:flex;align-items:baseline;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.svc-row .n{font-weight:600}
+.svc-row .d{display:block;font-size:13.5px;color:var(--muted);font-weight:400}
+.svc-row .dots{flex:1;border-bottom:1px dotted var(--line);transform:translateY(-5px)}
+.svc-row .p{font-family:var(--f-display);font-size:24px;font-weight:600;white-space:nowrap}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+.card .num{font-family:var(--f-display);font-size:34px;color:var(--accent);line-height:1}
+.card h3{margin:10px 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+
+/* reviews */
+.rev{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rev .card p{color:var(--ink);font-size:15.5px}
+.rev .who{margin-top:14px;font-size:13.5px;color:var(--muted)}
+.stars{color:var(--accent);letter-spacing:2px;font-size:14px;margin-bottom:8px}
+
+/* booking */
+.book{background:var(--soft);border-radius:28px;padding:40px;display:grid;grid-template-columns:.9fr 1.1fr;gap:40px}
+.book ul{padding:0;margin:20px 0 0;list-style:none}
+.book li{padding:8px 0 8px 26px;position:relative;color:var(--muted)}
+.book li::before{content:"";position:absolute;left:0;top:15px;width:12px;height:12px;border-radius:50%;border:2px solid var(--accent)}
+form{background:var(--surface);border-radius:var(--r);padding:24px;display:grid;gap:14px;border:1px solid var(--line)}
+label{display:grid;gap:6px;font-size:13.5px;font-weight:600}
+input,select,textarea{font:500 15.5px var(--f-body);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err{color:#c2413b;font-size:13px;min-height:1px}
+.or{text-align:center;font-size:13.5px;color:var(--muted)}
+.tgbtn{background:var(--tg);color:#fff}
+
+/* contacts */
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.map{border-radius:var(--r);min-height:240px;background:
+  linear-gradient(90deg,transparent 48%,var(--line) 48% 52%,transparent 52%) 0 0/80px 80px,
+  linear-gradient(0deg,transparent 48%,var(--line) 48% 52%,transparent 52%) 0 0/80px 80px,var(--surface);
+  border:1px solid var(--line);position:relative}
+.pin{position:absolute;left:50%;top:45%;transform:translate(-50%,-100%);background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:10px;font-size:13.5px;font-weight:700;white-space:nowrap}
+.pin::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:var(--accent)}
+dl{margin:0;display:grid;gap:14px}
+dt{font-size:13px;color:var(--muted)} dd{margin:0;font-weight:600}
+
+footer{padding:30px 0 90px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+
+/* owner notification (demo) */
+.owner{position:fixed;right:20px;bottom:20px;width:min(360px,calc(100vw - 32px));z-index:50;transform:translateY(140%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2)}
+.owner.show{transform:none}
+.owner .lbl{font-size:12.5px;font-weight:700;color:var(--muted);margin:0 0 6px 4px;display:flex;justify-content:space-between}
+.owner .lbl button{background:none;border:0;color:var(--muted);cursor:pointer;font:inherit}
+.tg{background:#fff;color:#111;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.25);overflow:hidden;font-size:14.5px}
+.tg-h{display:flex;gap:10px;align-items:center;padding:10px 14px;background:#517da2;color:#fff}
+.tg-h .av{width:34px;height:34px;border-radius:50%;background:#fff3;display:grid;place-items:center;font-weight:700}
+.tg-h small{display:block;opacity:.8;font-size:12px}
+.tg-b{background:#d7e3ec;padding:14px}
+.msg{background:#fff;border-radius:12px 12px 12px 4px;padding:10px 12px;line-height:1.45}
+.msg b{display:block;margin-bottom:4px}
+.msg .t{text-align:right;font-size:11px;color:#8a99a6;margin-top:4px}
+.msg-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.msg-btns span{background:#ffffffcc;border-radius:8px;text-align:center;padding:7px;color:#3a7bb8;font-weight:600;font-size:13px}
+.owner .after{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink)}
+.owner .after a{font-weight:700}
+
+.toast{position:fixed;left:50%;top:20px;transform:translate(-50%,-150%);background:var(--ok);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:60;transition:transform .35s}
+.toast.show{transform:translate(-50%,0)}
+
+@media (max-width:860px){
+  .links{display:none}
+  .hero{padding:36px 0 24px}
+  .hero .wrap,.book,.contacts{grid-template-columns:1fr}
+  .palette{aspect-ratio:16/11}
+  .svc,.why,.rev{grid-template-columns:1fr}
+  .book{padding:22px}
+  section{padding:40px 0}
+}
+@media (max-width:420px){ .row2{grid-template-columns:1fr} nav .btn{display:none} }
+</style>
+</head>
+<body>
+
+<div class="ribbon"><div class="wrap">
+  <span>Це демо лендингу. Такий сайт із заявками в Telegram можна замовити за 1–2 дні.</span>
+  <a href="https://t.me/c0nquestt" target="_blank" rel="noopener">Замовити в Telegram</a>
+</div></div>
+
+<nav><div class="wrap">
+  <a class="logo" href="#top">Nova <span>Nails</span></a>
+  <div class="links"><a href="#services">Послуги й ціни</a><a href="#reviews">Відгуки</a><a href="#contacts">Контакти</a></div>
+  <a class="btn small" href="#book">Записатися</a>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <div class="eyebrow">Манікюр і педикюр · Ірпінь</div>
+    <h1>Акуратний манікюр, який <em>тримається</em> 3–4 тижні</h1>
+    <p class="lead">Кабінет біля Центрального парку. Стерильні інструменти, одноразові розхідники, працюємо навіть без світла.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#book">Обрати час</a>
+      <a class="btn ghost" href="#services">Ціни</a>
+    </div>
+    <div class="facts">
+      <div><b>6 років</b><span>досвіду</span></div>
+      <div><b>1 200+</b><span>клієнтів</span></div>
+      <div><b>4,9</b><span>оцінка в Google</span></div>
+    </div>
+  </div>
+  <div class="palette" aria-hidden="true">
+    <div class="sw" style="background:#e8c4b8"></div><div class="sw" style="background:#a2574a"></div><div class="sw" style="background:#f2dfd3"></div>
+    <div class="sw" style="background:#5b2b2e"></div><div class="sw" style="background:#d9a59a"></div><div class="sw" style="background:#efe6df"></div>
+    <div class="sw" style="background:#c98b7c"></div><div class="sw" style="background:#2e2a2b"></div><div class="sw" style="background:#e3b9a3"></div>
+    <div class="tag"><span>Палітра сезону · 120+ відтінків</span><b>від 500 грн</b></div>
+  </div>
+</div></header>
+
+<section id="services"><div class="wrap">
+  <h2>Послуги й ціни</h2>
+  <p class="sub">Ціни актуальні. Дизайн одного нігтя — від 20 грн.</p>
+  <div class="svc">
+    <div class="svc-row"><span class="n">Манікюр без покриття<span class="d">60 хв</span></span><span class="dots"></span><span class="p">300 грн</span></div>
+    <div class="svc-row"><span class="n">Манікюр + гель-лак<span class="d">90 хв · вирівнювання</span></span><span class="dots"></span><span class="p">500 грн</span></div>
+    <div class="svc-row"><span class="n">Укріплення гелем<span class="d">120 хв</span></span><span class="dots"></span><span class="p">650 грн</span></div>
+    <div class="svc-row"><span class="n">Нарощення<span class="d">150 хв · залежно від довжини</span></span><span class="dots"></span><span class="p">від 800 грн</span></div>
+    <div class="svc-row"><span class="n">Педикюр пальчики + покриття<span class="d">60 хв</span></span><span class="dots"></span><span class="p">550 грн</span></div>
+    <div class="svc-row"><span class="n">Педикюр повний<span class="d">90 хв</span></span><span class="dots"></span><span class="p">750 грн</span></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Чому повертаються</h2>
+  <p class="sub">Три речі, про які пишуть у відгуках найчастіше.</p>
+  <div class="why">
+    <div class="card"><div class="num">01</div><h3>Стерильно</h3><p>Інструменти проходять три етапи обробки, крафт-пакет відкриваємо при вас.</p></div>
+    <div class="card"><div class="num">02</div><h3>Тримається</h3><p>Покриття носиться 3–4 тижні. Якщо відкололося за тиждень — виправимо безкоштовно.</p></div>
+    <div class="card"><div class="num">03</div><h3>Без очікування</h3><p>Записуєтесь на точний час, між клієнтами 15 хвилин на прибирання.</p></div>
+  </div>
+</div></section>
+
+<section id="reviews"><div class="wrap">
+  <h2>Відгуки</h2>
+  <p class="sub">З Google і Instagram.</p>
+  <div class="rev">
+    <div class="card"><div class="stars">★★★★★</div><p>Ходжу вже рік. Покриття реально тримається місяць, і завжди вчасно — без «почекайте 20 хвилин».</p><div class="who">Олена · Ірпінь</div></div>
+    <div class="card"><div class="stars">★★★★★</div><p>Записав дружину на подарунковий сертифікат через сайт за дві хвилини, вранці вже передзвонили.</p><div class="who">Андрій · Буча</div></div>
+    <div class="card"><div class="stars">★★★★★</div><p>Зручно, що ціни одразу на сайті. Нарощення зробили акуратно, форма ідеальна.</p><div class="who">Марина · Ірпінь</div></div>
+  </div>
+</div></section>
+
+<section id="book"><div class="wrap">
+  <div class="book">
+    <div>
+      <h2>Запис</h2>
+      <p class="sub" style="margin:0">Залиште заявку — підтвердимо час протягом 15 хвилин.</p>
+      <ul>
+        <li>Без дзвінків, якщо вам так зручніше</li>
+        <li>Нагадаємо про візит за день</li>
+        <li>Перенести можна до 12 годин до запису</li>
+      </ul>
+    </div>
+    <form id="f" novalidate>
+      <label>Ваше ім'я<input id="name" autocomplete="name" placeholder="Наприклад, Олена"></label>
+      <label>Телефон<input id="phone" type="tel" autocomplete="tel" placeholder="+380 __ ___ __ __"></label>
+      <label>Послуга
+        <select id="svc">
+          <option>Манікюр + гель-лак — 500 грн</option>
+          <option>Манікюр без покриття — 300 грн</option>
+          <option>Укріплення гелем — 650 грн</option>
+          <option>Нарощення — від 800 грн</option>
+          <option>Педикюр пальчики + покриття — 550 грн</option>
+          <option>Педикюр повний — 750 грн</option>
+        </select>
+      </label>
+      <div class="row2">
+        <label>Бажаний день<input id="date" type="date"></label>
+        <label>Час
+          <select id="time"><option>Зранку (9–12)</option><option>Вдень (12–16)</option><option>Ввечері (16–20)</option></select>
+        </label>
+      </div>
+      <label>Коментар<textarea id="note" rows="2" placeholder="Необов'язково: дизайн, довжина, побажання"></textarea></label>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn" type="submit">Надіслати заявку</button>
+      <div class="or">або</div>
+      <a class="btn tgbtn" href="https://t.me/beauty_studio2_ua_demo_bot" target="_blank" rel="noopener">Обрати точний час у Telegram-боті</a>
+    </form>
+  </div>
+</div></section>
+
+<section id="contacts"><div class="wrap">
+  <h2>Контакти</h2>
+  <p class="sub">Вхід з двору, другий поверх, є парковка.</p>
+  <div class="contacts">
+    <div class="map"><div class="pin">Nova Nails</div></div>
+    <div class="card"><dl>
+      <div><dt>Адреса</dt><dd>Ірпінь, вул. Університетська, 1 (демо)</dd></div>
+      <div><dt>Графік</dt><dd>Пн–Сб 9:00–20:00, Нд — вихідний</dd></div>
+      <div><dt>Телефон</dt><dd>+380 00 000 00 00 (демо)</dd></div>
+      <div><dt>Instagram</dt><dd>@nova.nails.demo</dd></div>
+    </dl></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Nova Nails — вигаданий салон для демонстрації. Сайт зроблено як приклад: послуги й ціни, відгуки, форма запису із заявкою власнику в Telegram. Замовити такий: <a href="https://t.me/c0nquestt" target="_blank" rel="noopener">Telegram @c0nquestt</a>.</div></footer>
+
+<div class="toast" id="toast">Заявку надіслано. Підтвердимо час найближчим часом.</div>
+
+<aside class="owner" id="owner" aria-live="polite">
+  <div class="lbl"><span>Так заявка приходить власнику в Telegram</span><button type="button" id="close" aria-label="Закрити">Закрити</button></div>
+  <div class="tg">
+    <div class="tg-h"><div class="av">N</div><div>Nova Nails · заявки<small>бот</small></div></div>
+    <div class="tg-b">
+      <div class="msg" id="msg"></div>
+      <div class="msg-btns"><span>Підтвердити</span><span>Подзвонити</span></div>
+    </div>
+  </div>
+  <div class="after">Хочете такий сайт для себе? Напишіть <a href="https://t.me/c0nquestt" target="_blank" rel="noopener">@c0nquestt</a> — запуск за 1–2 дні.</div>
+</aside>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const d=$('date'); const today=new Date(); const iso=x=>x.toISOString().slice(0,10);
+  d.min=iso(today); const tm=new Date(today); tm.setDate(tm.getDate()+1); d.value=iso(tm);
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  $('f').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('name').value.trim(), phone=$('phone').value.trim();
+    const digits=phone.replace(/\D/g,'');
+    if(!name){ $('err').textContent='Вкажіть, будь ласка, ім\'я.'; $('name').focus(); return; }
+    if(digits.length<10){ $('err').textContent='Перевірте номер телефону.'; $('phone').focus(); return; }
+    $('err').textContent='';
+    const dt=d.value? new Date(d.value+'T12:00').toLocaleDateString('uk-UA',{day:'numeric',month:'long',weekday:'short'}):'—';
+    const now=new Date().toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'});
+    const note=$('note').value.trim();
+    $('msg').innerHTML='<b>Нова заявка з сайту</b>'+
+      'Ім\'я: '+esc(name)+'<br>Телефон: '+esc(phone)+'<br>Послуга: '+esc($('svc').value)+
+      '<br>Коли: '+esc(dt)+', '+esc($('time').value)+(note?'<br>Коментар: '+esc(note):'')+
+      '<div class="t">'+now+'</div>';
+    const t=$('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600);
+    setTimeout(()=>$('owner').classList.add('show'),500);
+    e.target.reset(); d.value=iso(tm);
+  });
+  $('close').addEventListener('click',()=>$('owner').classList.remove('show'));
+})();
+</script>
+</body>
+</html>
