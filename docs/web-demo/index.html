@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Бот для запису — демо</title>
-<meta name="description" content="Спробуйте Telegram-бота для запису до майстра: як клієнтка і як власниця салону.">
+<meta name="description" content="Спробуйте Telegram-бота для запису до майстра: як клієнт і як власник.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap">
 <style>
@@ -94,10 +94,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 <div class="wrap">
   <header>
     <div class="eyebrow">Демо · Telegram-бот для запису</div>
-    <h1>Один бот, два телефони: клієнтки і ваш</h1>
-    <p>Ліворуч бот очима клієнтки, праворуч — очима майстра. Вони пов'язані: запишіться ліворуч, і запис одразу прийде праворуч. Змініть ціну праворуч — і клієнтка побачить нову.</p>
+    <h1>Один бот, два телефони: клієнта і ваш</h1>
+    <p>Ліворуч бот очима клієнта, праворуч — очима майстра. Вони пов'язані: запишіться ліворуч, і запис одразу прийде праворуч. Змініть ціну праворуч — і клієнт побачить нову.</p>
     <ul class="try">
-      <li>Запишіться як клієнтка</li>
+      <li>Запишіться як клієнт</li>
       <li>Скасуйте запис у майстра</li>
       <li>Змініть ціну чи тривалість</li>
       <li>Додайте послугу</li>
@@ -106,13 +106,13 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   </header>
 
   <div class="tabs" role="tablist">
-    <button type="button" role="tab" id="tab-client" aria-selected="true">Клієнтка<span class="badge" hidden></span></button>
+    <button type="button" role="tab" id="tab-client" aria-selected="true">Клієнт<span class="badge" hidden></span></button>
     <button type="button" role="tab" id="tab-owner" aria-selected="false">Майстер<span class="badge" hidden></span></button>
   </div>
 
   <div class="phones">
-    <section class="phone client active" id="p-client" aria-label="Телефон клієнтки">
-      <div class="role">Телефон клієнтки</div>
+    <section class="phone client active" id="p-client" aria-label="Телефон клієнта">
+      <div class="role">Телефон клієнта</div>
       <div class="bar">
         <div class="ava" aria-hidden="true">BS</div>
         <div><b>Beauty Studio · запис</b><span>бот</span></div>
@@ -295,7 +295,7 @@ function book(s, d, m) {
   const b = { id: Math.random().toString(36).slice(2), client: "Ви (демо)", sid: s.id, date: d, time: m, mine: true };
   S.bookings.push(b);
   C.say(`Готово! Ви записані ✨\n${s.name}, ${dFull(d)} о ${hhmm(m)}.\nНагадаю вам напередодні.`);
-  O.say(`🆕 Новий запис\n${s.name} · ${s.price} грн\n${dShort(d)}, ${hhmm(m)}–${hhmm(m + s.min)}\nКлієнтка: Ви (демо)`, "in alert");
+  O.say(`🆕 Новий запис\n${s.name} · ${s.price} грн\n${dShort(d)}, ${hhmm(m)}–${hhmm(m + s.min)}\nКлієнт: Ви (демо)`, "in alert");
   O.kb([{ label: "📋 Відкрити записи", go: ownerBookings }]);
 }
 function clientMine() {
@@ -305,7 +305,7 @@ function clientMine() {
   C.kb(mine.map(b => ({ label: `❌ Скасувати ${dShort(b.date)} ${hhmm(b.time)}`, go: () => {
     S.bookings = S.bookings.filter(x => x !== b);
     C.say("Запис скасовано. Будемо раді бачити вас іншим разом!");
-    O.say(`⚠️ Клієнтка скасувала запис\n${svc(b.sid)?.name || "Послуга"}, ${dShort(b.date)} о ${hhmm(b.time)}\nЧас знову вільний для запису.`, "in alert");
+    O.say(`⚠️ Клієнт скасував запис\n${svc(b.sid)?.name || "Послуга"}, ${dShort(b.date)} о ${hhmm(b.time)}\nЧас знову вільний для запису.`, "in alert");
   } })));
 }
 
@@ -329,10 +329,10 @@ function ownerBookings() {
 }
 function bookingCard(b) {
   const s = svc(b.sid);
-  O.say(`${s ? s.name : "Послуга"} · ${s ? s.price + " грн" : ""}\n${dFull(b.date)}, ${hhmm(b.time)}\nКлієнтка: ${b.client}`);
+  O.say(`${s ? s.name : "Послуга"} · ${s ? s.price + " грн" : ""}\n${dFull(b.date)}, ${hhmm(b.time)}\nКлієнт: ${b.client}`);
   O.kb([
-    { label: "❌ Скасувати і повідомити клієнтку", cls: "danger", go: () => {
-      O.say("Точно скасувати? Клієнтка отримає сповіщення.");
+    { label: "❌ Скасувати і повідомити клієнта", cls: "danger", go: () => {
+      O.say("Точно скасувати? Клієнт отримає сповіщення.");
       O.kb([{ label: "Так, скасувати", cls: "danger", go: () => cancelByOwner(b) }, { label: "Ні", go: ownerBookings }], 2);
     } },
     { label: "↩️ До записів", go: ownerBookings },
@@ -347,22 +347,22 @@ function cancelByOwner(b) {
     C.say(`😔 Ваш запис на ${s ? s.name : "послугу"}, ${dFull(b.date)} о ${hhmm(b.time)} скасовано майстром.\nВибачте за незручність — оберіть інший зручний час:`, "in alert");
     C.kb([{ label: "📅 Записатися на інший час", go: chooseService }]);
   } else {
-    O.say(`Запис скасовано. ${b.client} отримала сповіщення в Telegram.\n(Запишіться як клієнтка ліворуч і скасуйте свій запис — побачите, як виглядає це сповіщення.)`);
+    O.say(`Запис скасовано. ${b.client} отримує сповіщення в Telegram.\n(Запишіться як клієнт ліворуч і скасуйте свій запис — побачите, як виглядає це сповіщення.)`);
   }
 }
 
 function ownerServices() {
-  O.say("💅 Послуги\n\n" + S.services.map(s => `${s.on ? "🟢" : "⚪️"} ${s.name} — ${s.price} грн, ${s.min} хв`).join("\n") + "\n\n⚪️ — прихована, клієнтки її не бачать.");
+  O.say("💅 Послуги\n\n" + S.services.map(s => `${s.on ? "🟢" : "⚪️"} ${s.name} — ${s.price} грн, ${s.min} хв`).join("\n") + "\n\n⚪️ — прихована, клієнти її не бачать.");
   O.kb([...S.services.map(s => ({ label: `${s.name}`, go: () => serviceCard(s) })), { label: "➕ Додати послугу", cls: "primary", go: addService }]);
 }
 function serviceCard(s) {
   if (!S.services.includes(s)) return ownerServices();
-  O.say(`${s.name}\nЦіна: ${s.price} грн\nТривалість: ${s.min} хв\nСтатус: ${s.on ? "показується клієнткам" : "прихована"}`);
+  O.say(`${s.name}\nЦіна: ${s.price} грн\nТривалість: ${s.min} хв\nСтатус: ${s.on ? "показується клієнтам" : "прихована"}`);
   O.kb([
     { label: "💰 Ціна", go: () => editPrice(s) },
     { label: "⏱ Тривалість", go: () => editDuration(s) },
     { label: "✏️ Назва", go: () => editName(s) },
-    { label: s.on ? "🙈 Сховати" : "👁 Показати", go: () => { s.on = !s.on; O.say(s.on ? "Послуга знову доступна клієнткам." : "Послугу приховано. Записи на неї зберігаються."); serviceCard(s); } },
+    { label: s.on ? "🙈 Сховати" : "👁 Показати", go: () => { s.on = !s.on; O.say(s.on ? "Послуга знову доступна клієнтам." : "Послугу приховано. Записи на неї зберігаються."); serviceCard(s); } },
     { label: "🗑 Видалити", cls: "danger", go: () => {
       O.say(`Видалити «${s.name}»?`);
       O.kb([{ label: "Так, видалити", cls: "danger", go: () => { S.services = S.services.filter(x => x !== s); O.say("Послугу видалено."); ownerServices(); } }, { label: "Ні", go: () => serviceCard(s) }], 2);
@@ -380,13 +380,13 @@ function askNumber(prompt, min, max, done) {
 }
 function editPrice(s) {
   askNumber(`Нова ціна для «${s.name}» (зараз ${s.price} грн):`, 50, 20000, n => {
-    s.price = n; O.say(`✅ Ціну змінено: ${n} грн.\nКлієнтки вже бачать нову ціну — натисніть «📅 Записатися» ліворуч.`); serviceCard(s);
+    s.price = n; O.say(`✅ Ціну змінено: ${n} грн.\nКлієнти вже бачать нову ціну — натисніть «📅 Записатися» ліворуч.`); serviceCard(s);
   });
 }
 const DURS = [15, 30, 45, 60, 90, 120, 150, 180];
 function editDuration(s) {
   O.say(`Тривалість «${s.name}» (зараз ${s.min} хв):`);
-  O.kb(DURS.map(m => ({ label: `${m} хв`, go: () => { s.min = m; O.say(`✅ Тривалість: ${m} хв. Вільний час для клієнток перерахується сам.`); serviceCard(s); } })), 4);
+  O.kb(DURS.map(m => ({ label: `${m} хв`, go: () => { s.min = m; O.say(`✅ Тривалість: ${m} хв. Вільний час для клієнтів перерахується сам.`); serviceCard(s); } })), 4);
 }
 function editName(s) {
   O.say(`Нова назва для «${s.name}»:`);
@@ -400,7 +400,7 @@ function addService() {
       O.kb(DURS.map(m => ({ label: `${m} хв`, go: () => {
         const s = { id: S.nextId++, name: name.slice(0, 40), price, min: m, on: true };
         S.services.push(s);
-        O.say(`✅ Додано: ${s.name} — ${s.price} грн, ${s.min} хв.\nВона вже є в меню клієнтки ліворуч.`);
+        O.say(`✅ Додано: ${s.name} — ${s.price} грн, ${s.min} хв.\nВона вже є в меню клієнта ліворуч.`);
         ownerServices();
       } })), 4);
     });
@@ -411,7 +411,7 @@ function ownerBroadcast() {
   const booked = new Set(S.bookings.map(b => b.client)).size;
   O.say("📣 Розсилка. Кому надіслати?");
   O.kb([
-    { label: `👥 Усім клієнткам (${S.clients + 1})`, go: () => broadcastText("all") },
+    { label: `👥 Усім клієнтам (${S.clients + 1})`, go: () => broadcastText("all") },
     { label: `📅 Тільки записаним (${booked})`, go: () => broadcastText("booked") },
   ]);
 }
@@ -425,18 +425,18 @@ function broadcastText(aud) {
 function sendBroadcast(aud, text) {
   const mineBooked = S.bookings.some(b => b.mine);
   const n = aud === "all" ? S.clients + 1 : new Set(S.bookings.map(b => b.client)).size;
-  O.say(`✅ Надіслано: ${n} клієнткам.`);
+  O.say(`✅ Надіслано: ${n} клієнтам.`);
   if (aud === "all" || mineBooked) {
     C.say(`📣 Beauty Studio:\n${text}`, "in alert");
     C.kb([{ label: "📅 Записатися", go: chooseService }]);
   } else {
-    O.say("Ви (як клієнтка ліворуч) ще не записані, тому цю розсилку не отримали. Запишіться — і спробуйте ще раз.");
+    O.say("Ви (як клієнт ліворуч) ще не записані, тому цю розсилку не отримали. Запишіться — і спробуйте ще раз.");
   }
 }
 function ownerStats() {
   const upcoming = S.bookings.length;
   const sum = S.bookings.reduce((a, b) => a + (svc(b.sid)?.price || 0), 0);
-  O.say(`📊 Статистика\n\nКлієнток у базі: ${S.clients + 1}\nМайбутніх записів: ${upcoming} на ${sum.toLocaleString("uk-UA")} грн\nВиконано за місяць: ${S.done} записів\nВиручка за місяць: ${S.revenue.toLocaleString("uk-UA")} грн`);
+  O.say(`📊 Статистика\n\nКлієнтів у базі: ${S.clients + 1}\nМайбутніх записів: ${upcoming} на ${sum.toLocaleString("uk-UA")} грн\nВиконано за місяць: ${S.done} записів\nВиручка за місяць: ${S.revenue.toLocaleString("uk-UA")} грн`);
 }
 
 const COMMANDS = {

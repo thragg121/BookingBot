@@ -1,6 +1,9 @@
-﻿from sqlalchemy import func, select
+from datetime import date
+
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.booking import Booking
 from app.models.user import User
 
 
@@ -69,6 +72,19 @@ async def get_all_user_ids(
 ) -> list[int]:
     result = await session.execute(
         select(User.id)
+    )
+
+    return list(result.scalars().all())
+
+
+async def get_booked_user_ids(
+    session: AsyncSession,
+) -> list[int]:
+    """Users who have at least one booking today or later."""
+    result = await session.execute(
+        select(Booking.user_id)
+        .where(Booking.booking_date >= date.today())
+        .distinct()
     )
 
     return list(result.scalars().all())

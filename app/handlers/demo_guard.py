@@ -1,9 +1,8 @@
 """Blocks destructive owner actions for demo visitors."""
 
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 
-from app.core.texts import BTN_BROADCAST
 from app.filters.admin import IsDemoVisitor
 
 
@@ -20,15 +19,6 @@ BLOCKED_CALLBACKS = (
     "edit_service_duration:",
     "delete_service:",
 )
-
-
-@router.message(F.text == BTN_BROADCAST)
-async def demo_broadcast_handler(message: Message) -> None:
-    await message.answer(
-        "📢 Тут власник надсилає повідомлення всім клієнтам: "
-        "акції, вільні вікна, нагадування.\n\n"
-        "<i>У демо розсилка вимкнена.</i>"
-    )
 
 
 @router.callback_query(F.data.startswith(BLOCKED_CALLBACKS))

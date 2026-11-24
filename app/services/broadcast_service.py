@@ -1,16 +1,25 @@
 ﻿from aiogram import Bot
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.users import get_all_user_ids
+from app.database.users import get_all_user_ids, get_booked_user_ids
+from app.keyboards.broadcast import AUDIENCE_BOOKED
+
+
+async def get_audience_ids(
+    session: AsyncSession,
+    audience: str,
+) -> list[int]:
+    if audience == AUDIENCE_BOOKED:
+        return await get_booked_user_ids(session)
+
+    return await get_all_user_ids(session)
 
 
 async def send_broadcast(
     bot: Bot,
-    session: AsyncSession,
+    user_ids: list[int],
     text: str,
 ) -> tuple[int, int]:
-    user_ids = await get_all_user_ids(session)
-
     success_count = 0
     failed_count = 0
 
