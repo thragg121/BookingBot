@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бот для запису — демо</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600&display=swap">
+<style>
+/* Layout: phone-sized chat on the left, the master's view on the right; stacks on phones. */
+:root {
+  --bg: #eef0f4;
+  --surface: #ffffff;
+  --chat: #dfe5ec;
+  --ink: #1c2230;
+  --muted: #5d6676;
+  --line: #d3d9e2;
+  --accent: #0e7c74;
+  --accent-ink: #ffffff;
+  --bubble-in: #ffffff;
+  --bubble-out: #d4f0eb;
+  --btn: #f4f7fa;
+  --ok: #1f8a4c;
+  --f-display: "Unbounded", "Manrope", system-ui, sans-serif;
+  --f-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12161d; --surface: #1b212b; --chat: #0f1319; --ink: #e8ecf2; --muted: #9aa4b3;
+  --line: #2b3340; --accent: #3cc2b5; --accent-ink: #062320; --bubble-in: #222a36;
+  --bubble-out: #11423d; --btn: #26303d; --ok: #4cc983; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1b212b; --chat: #0f1319; --ink: #e8ecf2; --muted: #9aa4b3;
+  --line: #2b3340; --accent: #3cc2b5; --accent-ink: #062320; --bubble-in: #222a36;
+  --bubble-out: #11423d; --btn: #26303d; --ok: #4cc983; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 40px }
+.wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 28px }
+header { display: grid; gap: 8px; max-width: 640px }
+h1 { font-family: var(--f-display); font-weight: 600; font-size: clamp(22px, 4vw, 30px); line-height: 1.2; margin: 0; text-wrap: balance }
+header p { margin: 0; color: var(--muted) }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 700 }
+.stage { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 28px; align-items: start }
+@media (max-width: 760px) { .stage { grid-template-columns: minmax(0, 1fr) } }
+
+.phone { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; height: 620px; max-height: 80vh; min-height: 480px }
+.bar { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line) }
+.ava { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none }
+.bar b { display: block; font-size: 15px }
+.bar span { font-size: 12px; color: var(--muted) }
+.restart { margin-left: auto; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 5px 9px; font: inherit; font-size: 12px; cursor: pointer }
+.chat { flex: 1; overflow-y: auto; background: var(--chat); padding: 14px 12px; display: flex; flex-direction: column; gap: 8px }
+.msg { max-width: 88%; padding: 9px 12px; border-radius: 14px; white-space: pre-line; animation: pop .18s ease-out }
+.msg.in { background: var(--bubble-in); align-self: flex-start; border-bottom-left-radius: 4px }
+.msg.out { background: var(--bubble-out); align-self: flex-end; border-bottom-right-radius: 4px }
+.kb { display: grid; gap: 6px; align-self: stretch; animation: pop .18s ease-out }
+.kb.cols-2 { grid-template-columns: 1fr 1fr }
+.kb.cols-3 { grid-template-columns: repeat(3, 1fr) }
+.kb button { background: var(--btn); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 9px 8px; font: inherit; font-size: 14px; cursor: pointer; text-align: center }
+.kb button:hover { border-color: var(--accent) }
+.kb button:focus-visible, .restart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.kb button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600 }
+.kb.used { opacity: .45; pointer-events: none }
+@keyframes pop { from { transform: translateY(4px); opacity: .4 } to { transform: none; opacity: 1 } }
+@media (prefers-reduced-motion: reduce) { .msg, .kb { animation: none } }
+
+.side { display: grid; gap: 16px; min-width: 0 }
+.side h2 { font-family: var(--f-display); font-weight: 500; font-size: 17px; margin: 0 }
+.note { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 4px }
+.note .who { font-size: 12px; color: var(--muted) }
+.note.new { border-color: var(--ok) }
+.note .row { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums }
+.empty { color: var(--muted); font-size: 14px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 14px }
+ul.feat { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted) }
+.cta { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 6px }
+.cta b { font-size: 16px }
+.cta .price { font-family: var(--f-display); font-size: 20px; font-variant-numeric: tabular-nums }
+.cta a { color: var(--accent); font-weight: 700; text-decoration: none }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Демо · бот для онлайн-запису</div>
+    <h1>Запишіться до майстра так, як це робитиме ваша клієнтка</h1>
+    <p>Тисніть кнопки в чаті ліворуч. Праворуч одразу з'являється сповіщення, яке отримує майстер. Справжній бот працює так само, тільки в Telegram.</p>
+  </header>
+
+  <div class="stage">
+    <section class="phone" aria-label="Чат з ботом">
+      <div class="bar">
+        <div class="ava" aria-hidden="true">BS</div>
+        <div><b>Beauty Studio · запис</b><span>бот</span></div>
+        <button class="restart" id="restart" type="button">Почати знову</button>
+      </div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+    </section>
+
+    <aside class="side">
+      <h2>Що бачить майстер</h2>
+      <div id="notes"><div class="empty" id="empty">Тут з'явиться запис, щойно клієнтка його підтвердить.</div></div>
+
+      <h2>Що вміє бот</h2>
+      <ul class="feat">
+        <li>Показує тільки вільний час, з урахуванням тривалості послуги.</li>
+        <li>Не дає двом клієнткам записатися на один час.</li>
+        <li>Клієнтка бачить свої записи і може скасувати.</li>
+        <li>Майстер має панель: записи на день, клієнти, редагування послуг і цін.</li>
+        <li>Працює 24/7, навіть коли ви з клієнткою або спите.</li>
+      </ul>
+
+      <div class="cta">
+        <b>Такий бот під ваші послуги та графік</b>
+        <span class="price">2 500 грн</span>
+        <span>запуск за 1–2 дні · далі 300 грн/міс за хостинг і правки</span>
+        <span>Напишіть у Telegram: <a href="https://t.me/c0nquestt">@c0nquestt</a> (Денис)</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const SERVICES = [
+  { name: "Жіноча стрижка", min: 60, price: 600 },
+  { name: "Манікюр з покриттям", min: 90, price: 750 },
+  { name: "Чоловіча стрижка", min: 45, price: 400 },
+  { name: "Фарбування брів", min: 30, price: 350 },
+];
+const OPEN = 9 * 60, CLOSE = 20 * 60, STEP = 30;
+const DAYS = ["нд", "пн", "вт", "ср", "чт", "пт", "сб"];
+const MONTHS = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+
+const chat = document.getElementById("chat");
+const notes = document.getElementById("notes");
+let state = {};
+
+const hhmm = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+const dShort = d => `${DAYS[d.getDay()]} ${d.getDate()}.${String(d.getMonth() + 1).padStart(2, "0")}`;
+const dFull = d => `${d.getDate()} ${MONTHS[d.getMonth()]}, ${DAYS[d.getDay()]}`;
+
+function say(text, who = "in") {
+  const el = document.createElement("div");
+  el.className = "msg " + who;
+  el.textContent = text;
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+}
+function keyboard(buttons, cols = 1) {
+  const kb = document.createElement("div");
+  kb.className = "kb" + (cols > 1 ? " cols-" + cols : "");
+  buttons.forEach(b => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = b.label;
+    if (b.primary) btn.className = "primary";
+    btn.addEventListener("click", () => {
+      kb.classList.add("used");
+      say(b.label, "out");
+      setTimeout(b.go, 350);
+    });
+    kb.appendChild(btn);
+  });
+  chat.appendChild(kb);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Deterministic "already booked" slots so the demo looks like a real schedule.
+function busy(date, start) {
+  const seed = date.getDate() * 7 + start / STEP;
+  return seed % 5 === 0 || seed % 7 === 3;
+}
+
+function start() {
+  chat.innerHTML = "";
+  state = {};
+  say("Вітаю! 👋 Я бот для запису в Beauty Studio.\nОберіть, що вас цікавить:");
+  keyboard([
+    { label: "📅 Записатися", go: chooseService },
+    { label: "💅 Послуги і ціни", go: showPrices },
+  ], 2);
+}
+function showPrices() {
+  say(SERVICES.map(s => `${s.name} — ${s.price} грн, ${s.min} хв`).join("\n"));
+  keyboard([{ label: "📅 Записатися", go: chooseService }]);
+}
+function chooseService() {
+  say("Оберіть послугу:");
+  keyboard(SERVICES.map(s => ({ label: `${s.name} · ${s.price} грн`, go: () => { state.service = s; chooseDate(); } })));
+}
+function chooseDate() {
+  say(`${state.service.name}, ${state.service.min} хв.\nОберіть дату:`);
+  const out = [];
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  while (out.length < 6) {
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() === 0) continue; // Sunday off
+    const day = new Date(d);
+    out.push({ label: dShort(day), go: () => { state.date = day; chooseTime(); } });
+  }
+  keyboard(out, 3);
+}
+function chooseTime() {
+  const slots = [];
+  for (let m = OPEN; m + state.service.min <= CLOSE; m += STEP) {
+    if (!busy(state.date, m)) slots.push(m);
+  }
+  say(`Вільний час на ${dFull(state.date)}:\n(зайнятий час бот не показує)`);
+  keyboard(slots.slice(0, 12).map(m => ({ label: hhmm(m), go: () => { state.time = m; confirm(); } })), 3);
+}
+function confirm() {
+  const s = state.service;
+  say(`Перевірте запис:\n\n${s.name}\n${dFull(state.date)}, ${hhmm(state.time)}–${hhmm(state.time + s.min)}\nВартість: ${s.price} грн`);
+  keyboard([
+    { label: "✅ Підтвердити", primary: true, go: done },
+    { label: "Змінити час", go: chooseTime },
+  ], 2);
+}
+function done() {
+  const s = state.service;
+  say(`Готово! Ви записані ✨\n${s.name}, ${dFull(state.date)} о ${hhmm(state.time)}.\nНагадаю вам напередодні.`);
+  keyboard([{ label: "📅 Записатися ще", go: chooseService }, { label: "↩️ На початок", go: start }], 2);
+  notify();
+}
+function notify() {
+  const empty = document.getElementById("empty");
+  if (empty) empty.remove();
+  document.querySelectorAll(".note.new").forEach(n => n.classList.remove("new"));
+  const s = state.service;
+  const n = document.createElement("div");
+  n.className = "note new";
+  n.innerHTML = `<span class="who">Повідомлення від бота · щойно</span>
+    <b>🆕 Новий запис</b>
+    <div class="row"><span>Послуга</span><span></span></div>
+    <div class="row"><span>Дата і час</span><span></span></div>
+    <div class="row"><span>Вартість</span><span></span></div>
+    <div class="row"><span>Клієнтка</span><span>Ви (демо)</span></div>`;
+  const cells = n.querySelectorAll(".row span:last-child");
+  cells[0].textContent = s.name;
+  cells[1].textContent = `${dShort(state.date)}, ${hhmm(state.time)}`;
+  cells[2].textContent = `${s.price} грн`;
+  notes.prepend(n);
+}
+
+document.getElementById("restart").addEventListener("click", start);
+start();
+</script>
+</body>
+</html>
